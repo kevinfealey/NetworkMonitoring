@@ -21,3 +21,6 @@ Is designed to bring down a running apache server, then bring it back online wit
 
 ##isIPNeeded.sh##
 Works with emailIP.sh to send an email alert when the host's external IP address has changed. This script will also poll a particular URL (if run as a cronjob) to determine if the current IP address should be emailed, regardless of if it has changed.
+
+##rebootNotify##
+Should be added to init.d to execute emailOnReboot.sh on every boot.
