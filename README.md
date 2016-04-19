@@ -24,3 +24,14 @@ Works with emailIP.sh to send an email alert when the host's external IP address
 
 ##rebootNotify
 Should be added to init.d to execute emailOnReboot.sh on every boot.
+
+##postAuth.py
+Python script to be executed upon successful login to OpenVPN Access Server.
+Set up by running:
+```bash
+./usr/local/openvpn_as/scripts/sacli -k auth.module.post_auth_script --value_file=/pathToScript/postAuth.py ConfigPut
+./usr/local/openvpn_as/scripts/sacli start
+```
+Additional info:
+- https://docs.openvpn.net/docs/access-server/openvpn-access-server-post-auth-scripting.html
+- https://openvpn.net/index.php/access-server/docs/admin-guides-sp-859543150/howto-commands/411-access-server-post-auth-script.html
