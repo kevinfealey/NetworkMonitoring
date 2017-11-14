@@ -1,0 +1,24 @@
+#! /bin/sh
+# /etc/init.d/rebootNotify
+#
+# To stop this from running on boot, run:
+# /update-rc.d -f rebootNotify remove
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo "Starting rebootNotify"
+    # The first argument will appear in the subject line of the e-mail
+    sh /home/scripts/emailOnReboot.sh Booted
+    ;;
+  stop)
+    echo "Stopping rebootNotify"
+    sh /home/scripts/emailOnReboot.sh Stopped
+    ;;
+  *)
+    echo "Usage: /etc/init.d/rebootNotify {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
