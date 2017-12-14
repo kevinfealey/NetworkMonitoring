@@ -1,0 +1,11 @@
+[Unit]
+Description=Startup / Shutdown / Reboot Notifier
+After=network.target auditd.service
+
+[Service]
+ExecStart=/startup_scripts/emailOnReboot.sh Started
+ExecStop=/starup_scripts/emailOnReboot.sh Stopped
+Type=idle
+
+[Install]
+WantedBy=multi-user.target
