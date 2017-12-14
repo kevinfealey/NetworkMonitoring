@@ -1,45 +1,30 @@
+
 #!/bin/bash
 
 #======================================
 #Instructions to make this work for you
 #======================================
-#Update log and script paths as necessary
 #Set up your credentials in /etc/msmtprc
-#Update the EMAILADDRESS placeholders in the script below
+# See this script for help doing that: https://gist.github.com/kevinfealey/f4300202b5e0d1b6f8150eb9b9d6bcb2
+#Update the TOEMAIL and FROMEMAIL variables in the script below
 #======================================
 
-# This file is executed from /etc/init.d/rebootNotify [start/stop]
+# This file is executed from /etc/init.d/emailOnReboot [start/stop]
 
 SCRIPTNAME=`readlink -f $0`
 CURRENTDIR=`dirname $SCRIPTNAME`
-LOGFILE=$CURRENTDIR/scriptLogs/emailOnReboot.log
-MAILFILE=$CURRENTDIR/scriptLogs/rebootMail.txt
+TOEMAIL=""
+FROMEMAIL=""
 
 bootStatus=$1
-myIP=`hostname -i`
+myIP=`ifconfig | grep -A 8 -e enp3s0f0`
 myHostname=`hostname -f`
 
 echo "$SCRIPTNAME called with parameter '$bootStatus'"
-
-# Build mail formatted file
-echo "date: `date +%Y-%m-%d`" > $MAILFILE
-echo "to: EMAILADDRESS" >> $MAILFILE
-echo "subject: Your Box Has $bootStatus!" >> $MAILFILE
-echo "from: EMAILADDRESS" >> $MAILFILE
-echo "" >> $MAILFILE
-echo "Server internal IP address is: $myIP" >> $MAILFILE
-echo "Server hostname is: $myHostname" >> $MAILFILE
-echo "Server uptime: `uptime`" >> $MAILFILE
-
-echo "E-mail content:" >> $LOGFILE
-echo `cat $MAILFILE` >> $LOGFILE
-
-# Send the email
-# Credentials from /etc/msmtprc
-/usr/sbin/sendmail EMAILADDRESS < $MAILFILE
-
-echo "E-mail sent." >> $LOGFILE
-echo "Deleting $MAILFILE" >> $LOGFILE
-rm -rf $MAILFILE
-
-echo "" >> $LOGFILE
+#credentials from /etc/msmtprc
+mail -vs "$myHostname has $bootStatus!" $TOEMAIL <<__EOF
+Server ifconfig returned:
+$myIP
+Server hostname is: $myHostname
+Server uptime: `uptime`
+__EOF
